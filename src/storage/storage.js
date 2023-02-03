@@ -1,4 +1,3 @@
-import { parseJson, toJson } from "../utils/jsonUtils.js";
 export default (function () {
   const storageList = ["user"];
 
@@ -8,11 +7,11 @@ export default (function () {
     },
     getData(key) {
       if (localStorage.getItem(key))
-        return parseJson(localStorage.getItem(key));
+        return JSON.parse(localStorage.getItem(key));
       return null;
     },
     setData(key, data) {
-      localStorage.setItem(key, toJson(data));
+      localStorage.setItem(key, JSON.stringify(data));
     },
   };
 })();

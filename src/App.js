@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Header from "./layouts/Header";
-import Aside from "./layouts/Aside";
-import { storageAPI } from "./storage/storageAPI";
+import Main from "./layouts/Main";
+import { storageAPI } from "./storage/storageAPI.js";
 function App() {
   useEffect(() => {
     storageAPI.setInitialStorage();
@@ -11,7 +11,7 @@ function App() {
       <div id="wrapper">
         <div className="container">
           <Header />
-          <Aside disabled={true} />
+          <Main />
         </div>
       </div>
     </div>

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 
-function FilterItem({ filterBy, img }) {
-  const [selected, setSelected] = useState("");
-  const onFilterClick = () => {
-    selected === "selected" ? setSelected("") : setSelected("selected");
+function FilterItem({ filterBy, name, img, onFilterClick, selected }) {
+  const onClick = () => {
+    onFilterClick((prev) =>
+      prev[filterBy] !== name
+        ? { ...prev, [filterBy]: name }
+        : (delete prev[filterBy], { ...prev })
+    );
   };
   return (
-    <li data-filtername={filterBy} onClick={onFilterClick} className={selected}>
-      {img && (
-        <img src={img} className="filter__tagImg" alt={`${filterBy}_img`} />
-      )}
-      {filterBy}
+    <li data-filtername={name} onClick={onClick} className={selected}>
+      {img && <img src={img} className="filter__tagImg" alt={`${name}_img`} />}
+      {name}
     </li>
   );
 }

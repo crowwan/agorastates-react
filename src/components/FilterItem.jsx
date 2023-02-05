@@ -4,8 +4,8 @@ function FilterItem({ filterBy, name, img, onFilterClick, selected }) {
   const onClick = () => {
     onFilterClick((prev) =>
       prev[filterBy] !== name
-        ? { ...prev, [filterBy]: name }
-        : (delete prev[filterBy], { ...prev })
+        ? { ...prev, [filterBy]: name, page: 1 }
+        : (delete prev[filterBy], { ...prev, page: 1 })
     );
   };
   return (

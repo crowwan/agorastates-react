@@ -7,7 +7,10 @@ export default function Main({ user }) {
   const [discussions, setDiscussions] = useState([]);
   const [pages, setPages] = useState(0);
   const [queryObj, setQueryObj] = useState({ page: 1 });
-
+  const setMain = (data) => {
+    setDiscussions(data);
+    setQueryObj({ page: 1 });
+  };
   useEffect(() => {
     (async () => {
       console.log("fetching...");
@@ -20,9 +23,11 @@ export default function Main({ user }) {
   return (
     <main>
       <Aside
+        user={user}
         disabled={!user ? true : false}
         query={queryObj}
         setQueryObj={setQueryObj}
+        setDiscussions={setMain}
       />
       <DiscussionsSection
         discussions={discussions}

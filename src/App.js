@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./layouts/Header";
 import Main from "./layouts/Main";
 import { storageAPI } from "./storage/storageAPI.js";
 function App() {
+  const [user, setUser] = useState("");
+
   useEffect(() => {
     storageAPI.setInitialStorage();
   }, []);
@@ -10,8 +12,8 @@ function App() {
     <div className="App">
       <div id="wrapper">
         <div className="container">
-          <Header />
-          <Main />
+          <Header user={user} setUser={setUser} />
+          <Main user={user} />
         </div>
       </div>
     </div>

@@ -43,7 +43,7 @@ const SignUpModal = userModal(userAPI.signUp);
 const SignInModal = userModal(userAPI.signIn);
 
 export default function Header({ user, setUser }) {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState("");
   const onSignupClick = () => {
     setShow("SIGN UP");
   };

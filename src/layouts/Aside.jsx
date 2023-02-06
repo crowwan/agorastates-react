@@ -6,7 +6,7 @@ import ModalContent from "../components/ModalContent";
 const tags = filterBy.filter((a) => a.name !== "unanswered");
 const unanswered = filterBy.filter((a) => a.name === "unanswered");
 
-const DiscussionModal = ({ user, title, setShow, setDiscussions }) => {
+const NewDiscussionModal = ({ user, setShow, initFetch }) => {
   const [discussionTitle, setDiscussionTitle] = useState("");
   const [tag, setTag] = useState("");
   const [content, setContent] = useState("");
@@ -27,14 +27,14 @@ const DiscussionModal = ({ user, title, setShow, setDiscussions }) => {
   useEffect(() => {
     submit &&
       (async () => {
-        const res = await fetch("http://localhost:4000/discussions?page=1", {
+        await fetch("http://localhost:4000/discussions?page=1", {
           method: "POST",
           mode: "cors",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: Date.now().toString(),
+            id: Date.now(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             title: discussionTitle,
@@ -44,14 +44,14 @@ const DiscussionModal = ({ user, title, setShow, setDiscussions }) => {
             avatarUrl: "./asset/user.png",
             answer: null,
           }),
-        }).then((res) => res.json());
+        });
 
-        setDiscussions(res.discussion);
+        initFetch();
         setShow((prev) => !prev);
       })();
   }, [submit]);
   return (
-    <Modal title={title} setShow={setShow}>
+    <Modal title="NEW DISCUSSION" setShow={setShow}>
       <ModalContent text="TITLE">
         <input
           className="modal__body new-discussion-title"
@@ -77,7 +77,7 @@ const DiscussionModal = ({ user, title, setShow, setDiscussions }) => {
   );
 };
 
-function Aside({ disabled, query, user, setQueryObj, setDiscussions }) {
+function Aside({ disabled, query, user, setQueryObj, initFetch }) {
   const [show, setShow] = useState(false);
   const onBtnClick = () => {
     setShow((prev) => !prev);
@@ -106,11 +106,10 @@ function Aside({ disabled, query, user, setQueryObj, setDiscussions }) {
         onFilterClick={setQueryObj}
       />
       {show && (
-        <DiscussionModal
+        <NewDiscussionModal
           user={user}
-          title="NEW DISCUSSION"
           setShow={setShow}
-          setDiscussions={setDiscussions}
+          initFetch={initFetch}
         />
       )}
     </aside>

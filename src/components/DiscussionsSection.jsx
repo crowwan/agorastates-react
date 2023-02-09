@@ -3,6 +3,8 @@ import DiscussionItem from "./DiscussionItem";
 import Pagination from "../layouts/Pagination";
 import Modal from "../ui/Modal";
 import ModalContent from "./ModalContent";
+import { fetchDataById } from "../utils/fetchData";
+
 const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
   const [answering, setAnswering] = useState(false);
   const [answer, setAnswer] = useState("");
@@ -20,39 +22,36 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
   const onAnswerChange = (e) => {
     setAnswer(e.target.value);
   };
-  useEffect(() => {
-    console.log(submit);
-    submit &&
+
+  const fetchDataWithMethod = (flag, method) => {
+    flag &&
       (async () => {
-        console.log("patch");
-        await fetch(`http://localhost:4000/discussions/${discussion.id}`, {
-          method: "PATCH",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: Date.now(),
-            createdAt: new Date().toISOString(),
-            author: discussion.author,
-            bodyHTML: answer,
-          }),
-        });
+        await fetchDataById(discussion.id, method);
         initFetch();
         setShow((prev) => !prev);
       })();
+  };
+
+  useEffect(() => {
+    fetchDataWithMethod(submit, {
+      method: "PATCH",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+        author: discussion.author,
+        bodyHTML: answer,
+      }),
+    });
   }, [submit]);
   useEffect(() => {
-    remove &&
-      (async () => {
-        console.log("delete");
-        await fetch(`http://localhost:4000/discussions/${discussion.id}`, {
-          method: "DELETE",
-          mode: "cors",
-        });
-        initFetch();
-        setShow((prev) => !prev);
-      })();
+    fetchDataWithMethod(remove, {
+      method: "DELETE",
+      mode: "cors",
+    });
   }, [remove]);
   return (
     <Modal title="Discussion" setShow={setShow}>

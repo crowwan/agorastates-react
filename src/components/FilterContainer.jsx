@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import FilterItem from "./FilterItem";
 function FilterContainer({ title, list, filterBy, target, onFilterClick }) {
   return (
@@ -18,4 +18,4 @@ function FilterContainer({ title, list, filterBy, target, onFilterClick }) {
   );
 }
 
-export default FilterContainer;
+export default memo(FilterContainer);

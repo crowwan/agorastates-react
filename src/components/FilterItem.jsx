@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 
 function FilterItem({ filterBy, name, img, onFilterClick, selected }) {
   const onClick = () => {
@@ -16,4 +16,4 @@ function FilterItem({ filterBy, name, img, onFilterClick, selected }) {
   );
 }
 
-export default FilterItem;
+export default memo(FilterItem);

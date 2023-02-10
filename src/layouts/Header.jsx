@@ -1,37 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ModalContent from "../components/ModalContent";
 import Modal from "../ui/Modal";
 import { userAPI } from "../user/userAPI";
 const userModal =
   (api) =>
   ({ setShow, setUser, title }) => {
-    const [id, setId] = useState("");
-    const [pw, setPw] = useState("");
-    const onIdChange = (e) => {
-      setId(e.target.value);
-    };
-    const onPwChange = (e) => {
-      setPw(e.target.value);
-    };
+    const idRef = useRef();
+    const pwRef = useRef();
+    // const [id, setId] = useState("");
+    // const [pw, setPw] = useState("");
+    // const onIdChange = (e) => {
+    //   setId(e.target.value);
+    // };
+    // const onPwChange = (e) => {
+    //   setPw(e.target.value);
+    // };
     const onSubmitClick = () => {
-      if (api(id, pw)) {
-        setUser(id);
+      if (api(idRef.current.value, pwRef.current.value)) {
+        setUser(idRef.current.value);
         setShow("");
       }
     };
-    useEffect(() => {
-      return () => {
-        setId("");
-        setPw("");
-      };
-    }, []);
     return (
       <Modal title={title} setShow={setShow}>
         <ModalContent text="id">
-          <input className="modal__body" onChange={onIdChange} value={id} />
+          <input className="modal__body" ref={idRef} />
         </ModalContent>
         <ModalContent text="password">
-          <input className="modal__body" onChange={onPwChange} value={pw} />
+          <input className="modal__body" ref={pwRef} />
         </ModalContent>
         <button className="modal__btnList--btn btn" onClick={onSubmitClick}>
           SUBMIT

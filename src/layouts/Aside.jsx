@@ -1,33 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FilterContainer from "../components/FilterContainer";
 import { filterBy } from "../data/filterBy";
 import Modal from "../ui/Modal";
 import ModalContent from "../components/ModalContent";
+import { fetchDataWithBody } from "../utils/fetchData";
 const tags = filterBy.filter((a) => a.name !== "unanswered");
 const unanswered = filterBy.filter((a) => a.name === "unanswered");
 
 const NewDiscussionModal = ({ user, setShow, initFetch }) => {
-  const [discussionTitle, setDiscussionTitle] = useState("");
-  const [tag, setTag] = useState("");
-  const [content, setContent] = useState("");
+  const titleRef = useRef();
+  const tagRef = useRef();
+  const contentRef = useRef();
   const [submit, setSubmit] = useState(false);
 
-  const onTitleChange = (e) => {
-    setDiscussionTitle(e.target.value);
-  };
-  const onTagChange = (e) => {
-    setTag(e.target.value);
-  };
-  const onContentChange = (e) => {
-    setContent(e.target.value);
-  };
   const onSubmitClick = () => {
     setSubmit((prev) => !prev);
   };
   useEffect(() => {
     submit &&
       (async () => {
-        await fetch("http://localhost:4000/discussions?page=1", {
+        await fetchDataWithBody("http://localhost:4000/discussions", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -37,10 +29,10 @@ const NewDiscussionModal = ({ user, setShow, initFetch }) => {
             id: Date.now(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            title: discussionTitle,
+            title: titleRef.current.value,
             author: user,
-            bodyHTML: content,
-            tag: tag,
+            bodyHTML: contentRef.current.value,
+            tag: tagRef.current.value,
             avatarUrl: "./asset/user.png",
             answer: null,
           }),
@@ -54,20 +46,23 @@ const NewDiscussionModal = ({ user, setShow, initFetch }) => {
     <Modal title="NEW DISCUSSION" setShow={setShow}>
       <ModalContent text="TITLE">
         <input
+          ref={titleRef}
           className="modal__body new-discussion-title"
-          onChange={onTitleChange}
+          // onChange={onTitleChange}
         />
       </ModalContent>
       <ModalContent text="TAG">
         <input
+          ref={tagRef}
           className="modal__body new-discussion-tag"
-          onChange={onTagChange}
+          // onChange={onTagChange}
         />
       </ModalContent>
       <ModalContent text="CONTENT">
         <textarea
+          ref={contentRef}
           className="modal__body new-discussion-content"
-          onChange={onContentChange}
+          // onChange={onContentChange}
         />
       </ModalContent>
       <button className="modal__btnList--btn btn" onClick={onSubmitClick}>

@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DiscussionItem from "./DiscussionItem";
 import Pagination from "../layouts/Pagination";
 import Modal from "../ui/Modal";
 import ModalContent from "./ModalContent";
-import { fetchDataById } from "../utils/fetchData";
+import { fetchDataWithBody } from "../utils/fetchData";
 
 const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
   const [answering, setAnswering] = useState(false);
-  const [answer, setAnswer] = useState("");
+  // ref 오류가 남 왜지?  모달이 뜰 때 값을 참조해서?
+  const answerRef = useRef();
   const [submit, setSubmit] = useState(false);
   const [remove, setRemove] = useState(false);
+
   const onAnswerClick = () => {
     setAnswering(true);
   };
@@ -19,40 +21,44 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
   const onRemoveClick = () => {
     setRemove(true);
   };
-  const onAnswerChange = (e) => {
-    setAnswer(e.target.value);
-  };
 
-  const fetchDataWithMethod = (flag, method) => {
-    flag &&
-      (async () => {
-        await fetchDataById(discussion.id, method);
-        initFetch();
-        setShow((prev) => !prev);
-      })();
-  };
+  // const fetchDataWithMethod = (flag, method) => {
+  //   console.log("...");
+  //   flag &&
+  //     (async () => {
+  //       await fetchDataWithBody(, method);
+  //       initFetch();
+  //       setShow((prev) => !prev);
+  //     })();
+  // };
 
   useEffect(() => {
-    fetchDataWithMethod(submit, {
-      method: "PATCH",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-        author: discussion.author,
-        bodyHTML: answer,
-      }),
-    });
+    // console.log("test");
+    // flag도 같이 함수로 빼면 {} 내부도 평가되어서 ref.current를 찾지 못하게 됨.
+    submit &&
+      fetchDataWithBody(`/discussions/${discussion.id}`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Date.now(),
+          createdAt: new Date().toISOString(),
+          author: discussion.author,
+          bodyHTML: answerRef.current.value,
+        }),
+      });
   }, [submit]);
+
   useEffect(() => {
-    fetchDataWithMethod(remove, {
-      method: "DELETE",
-      mode: "cors",
-    });
+    remove &&
+      fetchDataWithBody(`/discussions/${discussion.id}`, {
+        method: "DELETE",
+        mode: "cors",
+      });
   }, [remove]);
+
   return (
     <Modal title="Discussion" setShow={setShow}>
       <ModalContent text="TITLE">
@@ -76,8 +82,9 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
         <>
           <ModalContent text="ANSWER">
             <textarea
+              ref={answerRef}
               className="modal__body new-discussion-content"
-              onChange={onAnswerChange}
+              // onChange={onAnswerChange}
             />
           </ModalContent>
           <button className="modal__btnList--btn btn" onClick={onSubmitClick}>

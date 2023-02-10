@@ -5,6 +5,7 @@ function Pagination({ pages, page, setQueryObj }) {
   const pageList = Array(pages)
     .fill()
     .map((_, i) => i);
+
   const onPageClick = (e) => {
     setQueryObj((prev) =>
       prev.page === +e.target.textContent

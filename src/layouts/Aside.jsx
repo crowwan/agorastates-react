@@ -16,10 +16,12 @@ const NewDiscussionModal = ({ user, setShow, initFetch }) => {
   const onSubmitClick = () => {
     setSubmit((prev) => !prev);
   };
+  // TODO: 현재 post요청 시 404 에러 수정 완료 : 경로 오류
+  //TODO: fetch 요청 에러 처리
   useEffect(() => {
     submit &&
       (async () => {
-        await fetchDataWithBody("http://localhost:4000/discussions", {
+        await fetchDataWithBody("discussions", {
           method: "POST",
           mode: "cors",
           headers: {

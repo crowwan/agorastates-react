@@ -32,11 +32,12 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
   //     })();
   // };
 
+  //TODO: fetch 요청 에러 처리
   useEffect(() => {
     // console.log("test");
     // flag도 같이 함수로 빼면 {} 내부도 평가되어서 ref.current를 찾지 못하게 됨.
     submit &&
-      fetchDataWithBody(`/discussions/${discussion.id}`, {
+      fetchDataWithBody(`discussions/${discussion.id}`, {
         method: "PATCH",
         mode: "cors",
         headers: {
@@ -53,7 +54,7 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
 
   useEffect(() => {
     remove &&
-      fetchDataWithBody(`/discussions/${discussion.id}`, {
+      fetchDataWithBody(`discussions/${discussion.id}`, {
         method: "DELETE",
         mode: "cors",
       });

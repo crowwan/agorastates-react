@@ -11,7 +11,7 @@ export default function Main({ user }) {
   const initFetch = useCallback(() => {
     setQueryObj({ page: 1 });
   }, []);
-
+//TODO: fetch 요청 에러 처리
   useEffect(() => {
     (async () => {
       console.log("fetching...");

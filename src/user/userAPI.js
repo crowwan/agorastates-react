@@ -24,7 +24,12 @@ export const userAPI = {
   signIn(userId, userPw) {
     const userData = storage.getData("user");
     console.log(userId, userPw);
-    if (userData[userId] && userData[userId].pw === SHA256(userPw)) {
+
+    // 조건식 수정 함수 이용
+    if (
+      userData[userId] &&
+      passwordMatch(userData[userId].pw, SHA256(userPw))
+    ) {
       // user.setCurrentUser(userId);
       // user.notifyAll();
       return true;

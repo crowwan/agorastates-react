@@ -37,27 +37,35 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
     // console.log("test");
     // flag도 같이 함수로 빼면 {} 내부도 평가되어서 ref.current를 찾지 못하게 됨.
     submit &&
-      fetchDataWithBody(`discussions/${discussion.id}`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: Date.now(),
-          createdAt: new Date().toISOString(),
-          author: discussion.author,
-          bodyHTML: answerRef.current.value,
-        }),
-      });
+      (async () => {
+        fetchDataWithBody(`discussions/${discussion.id}`, {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: Date.now(),
+            createdAt: new Date().toISOString(),
+            author: discussion.author,
+            bodyHTML: answerRef.current.value,
+          }),
+        });
+        initFetch();
+        setShow((prev) => !prev);
+      })();
   }, [submit]);
 
   useEffect(() => {
     remove &&
-      fetchDataWithBody(`discussions/${discussion.id}`, {
-        method: "DELETE",
-        mode: "cors",
-      });
+      (async () => {
+        fetchDataWithBody(`discussions/${discussion.id}`, {
+          method: "DELETE",
+          mode: "cors",
+        });
+        initFetch();
+        setShow((prev) => !prev);
+      })();
   }, [remove]);
 
   return (

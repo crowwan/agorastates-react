@@ -4,10 +4,12 @@ import { filterBy } from "../data/filterBy";
 import Modal from "../ui/Modal";
 import ModalContent from "../components/ModalContent";
 import { fetchDataWithBody } from "../utils/fetchData";
+import { useSelector } from "react-redux";
 const tags = filterBy.filter((a) => a.name !== "unanswered");
 const unanswered = filterBy.filter((a) => a.name === "unanswered");
 
-const NewDiscussionModal = ({ user, setShow, initFetch }) => {
+const NewDiscussionModal = ({ setShow, initFetch }) => {
+  const user = useSelector((state) => state.user);
   const titleRef = useRef();
   const tagRef = useRef();
   const contentRef = useRef();
@@ -74,7 +76,8 @@ const NewDiscussionModal = ({ user, setShow, initFetch }) => {
   );
 };
 
-function Aside({ disabled, query, user, setQueryObj, initFetch }) {
+function Aside({ query, setQueryObj, initFetch }) {
+  const user = useSelector((state) => state.user);
   const [show, setShow] = useState(false);
   const onBtnClick = () => {
     setShow((prev) => !prev);
@@ -84,7 +87,7 @@ function Aside({ disabled, query, user, setQueryObj, initFetch }) {
       <button
         className="newDiscussion-btn btn can-disable"
         onClick={onBtnClick}
-        disabled={disabled}
+        disabled={!user}
       >
         NEW DISCUSSION
       </button>
@@ -102,13 +105,7 @@ function Aside({ disabled, query, user, setQueryObj, initFetch }) {
         target={query.unanswered || ""}
         onFilterClick={setQueryObj}
       />
-      {show && (
-        <NewDiscussionModal
-          user={user}
-          setShow={setShow}
-          initFetch={initFetch}
-        />
-      )}
+      {show && <NewDiscussionModal setShow={setShow} initFetch={initFetch} />}
     </aside>
   );
 }

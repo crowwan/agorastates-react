@@ -4,8 +4,10 @@ import Pagination from "../layouts/Pagination";
 import Modal from "../ui/Modal";
 import ModalContent from "./ModalContent";
 import { fetchDataWithBody } from "../utils/fetchData";
+import { useSelector } from "react-redux";
 
-const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
+const DiscussionModal = ({ discussion, setShow, initFetch }) => {
+  const user = useSelector((state) => state.user);
   const [answering, setAnswering] = useState(false);
   // ref 오류가 남 왜지?  모달이 뜰 때 값을 참조해서?
   const answerRef = useRef();
@@ -123,7 +125,6 @@ const DiscussionModal = ({ user, discussion, setShow, initFetch }) => {
 
 function DiscussionsSection({
   discussions = [],
-  user,
   pages,
   page,
   initFetch,
@@ -131,7 +132,7 @@ function DiscussionsSection({
 }) {
   // TODO: 이벤트 핸들러 구현
   // 궁금한 것: 이벤트 핸들러를 props로 넘겨줘도 메모리 효율이 안 좋나? 이벤트 위임으로 구현을 해야 하나?
-  // TODO: dataset 이용?
+  // TODO: dataset 이용?'
   const [show, setShow] = useState(false);
   const [discussion, setDiscussion] = useState({});
   const onListClick = (discussion) => {
@@ -163,7 +164,6 @@ function DiscussionsSection({
       <Pagination pages={pages} page={page} setQueryObj={setQueryObj} />
       {show && (
         <DiscussionModal
-          user={user}
           discussion={discussion}
           setShow={setShow}
           initFetch={initFetch}

@@ -3,7 +3,7 @@ import DiscussionsSection from "../components/DiscussionsSection";
 import Aside from "./Aside";
 import { fetchDataWithQuery } from "../utils/fetchData";
 
-export default function Main({ user }) {
+export default function Main() {
   const [discussions, setDiscussions] = useState([]);
   const [pages, setPages] = useState(0);
   const [queryObj, setQueryObj] = useState({ page: 1 });
@@ -23,15 +23,8 @@ export default function Main({ user }) {
 
   return (
     <main>
-      <Aside
-        user={user}
-        disabled={!user ? true : false}
-        query={queryObj}
-        setQueryObj={setQueryObj}
-        initFetch={initFetch}
-      />
+      <Aside query={queryObj} setQueryObj={setQueryObj} initFetch={initFetch} />
       <DiscussionsSection
-        user={user}
         discussions={discussions}
         pages={pages}
         page={queryObj.page}

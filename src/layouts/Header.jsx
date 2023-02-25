@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ModalContent from "../components/ModalContent";
 import Modal from "../ui/Modal";
+import { signIn, logOut } from "../features/userSlice";
 import { userAPI } from "../user/userAPI";
 const userModal =
   (api) =>
-  ({ setShow, setUser, title }) => {
+  ({ setShow, title }) => {
+    const dispatch = useDispatch();
     const idRef = useRef();
     const pwRef = useRef();
     // const [id, setId] = useState("");
@@ -17,7 +20,7 @@ const userModal =
     // };
     const onSubmitClick = () => {
       if (api(idRef.current.value, pwRef.current.value)) {
-        setUser(idRef.current.value);
+        dispatch(signIn(idRef.current.value));
         setShow("");
       }
     };
@@ -38,7 +41,9 @@ const userModal =
 const SignUpModal = userModal(userAPI.signUp);
 const SignInModal = userModal(userAPI.signIn);
 
-export default function Header({ user, setUser }) {
+export default function Header() {
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [show, setShow] = useState("");
   const onSignupClick = () => {
     setShow("SIGN UP");
@@ -47,7 +52,7 @@ export default function Header({ user, setUser }) {
     setShow("SIGN IN");
   };
   const onLogoutClick = () => {
-    setUser("");
+    dispatch(logOut());
   };
   return (
     <header className="header">
@@ -70,12 +75,8 @@ export default function Header({ user, setUser }) {
           </button>
         )}
       </section>
-      {show === "SIGN UP" && (
-        <SignUpModal title={show} setUser={setUser} setShow={setShow} />
-      )}
-      {show === "SIGN IN" && (
-        <SignInModal title={show} setUser={setUser} setShow={setShow} />
-      )}
+      {show === "SIGN UP" && <SignUpModal title={show} setShow={setShow} />}
+      {show === "SIGN IN" && <SignInModal title={show} setShow={setShow} />}
     </header>
   );
 }

@@ -11,17 +11,42 @@ const DiscussionModal = ({ discussion, setShow, initFetch }) => {
   const [answering, setAnswering] = useState(false);
   // ref 오류가 남 왜지?  모달이 뜰 때 값을 참조해서?
   const answerRef = useRef();
-  const [submit, setSubmit] = useState(false);
-  const [remove, setRemove] = useState(false);
+  // const [submit, setSubmit] = useState(false);
+  // const [remove, setRemove] = useState(false);
 
   const onAnswerClick = () => {
     setAnswering(true);
   };
   const onSubmitClick = () => {
-    setSubmit(true);
+    // setSubmit(true);
+    (async () => {
+      fetchDataWithBody(`discussions/${discussion.id}`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Date.now(),
+          createdAt: new Date().toISOString(),
+          author: discussion.author,
+          bodyHTML: answerRef.current.value,
+        }),
+      });
+      initFetch();
+      setShow((prev) => !prev);
+    })();
   };
   const onRemoveClick = () => {
-    setRemove(true);
+    // setRemove(true);
+    (async () => {
+      fetchDataWithBody(`discussions/${discussion.id}`, {
+        method: "DELETE",
+        mode: "cors",
+      });
+      initFetch();
+      setShow((prev) => !prev);
+    })();
   };
 
   // const fetchDataWithMethod = (flag, method) => {
@@ -35,40 +60,17 @@ const DiscussionModal = ({ discussion, setShow, initFetch }) => {
   // };
 
   //TODO: fetch 요청 에러 처리
-  useEffect(() => {
-    // console.log("test");
-    // flag도 같이 함수로 빼면 {} 내부도 평가되어서 ref.current를 찾지 못하게 됨.
-    submit &&
-      (async () => {
-        fetchDataWithBody(`discussions/${discussion.id}`, {
-          method: "PATCH",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: Date.now(),
-            createdAt: new Date().toISOString(),
-            author: discussion.author,
-            bodyHTML: answerRef.current.value,
-          }),
-        });
-        initFetch();
-        setShow((prev) => !prev);
-      })();
-  }, [submit]);
+  // useEffect(() => {
+  //   // console.log("test");
+  //   // flag도 같이 함수로 빼면 {} 내부도 평가되어서 ref.current를 찾지 못하게 됨.
+  //   submit &&
 
-  useEffect(() => {
-    remove &&
-      (async () => {
-        fetchDataWithBody(`discussions/${discussion.id}`, {
-          method: "DELETE",
-          mode: "cors",
-        });
-        initFetch();
-        setShow((prev) => !prev);
-      })();
-  }, [remove]);
+  // }, [submit]);
+
+  // useEffect(() => {
+  //   remove &&
+
+  // }, [remove]);
 
   return (
     <Modal title="Discussion" setShow={setShow}>

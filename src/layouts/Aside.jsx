@@ -13,39 +13,39 @@ const NewDiscussionModal = ({ setShow, initFetch }) => {
   const titleRef = useRef();
   const tagRef = useRef();
   const contentRef = useRef();
-  const [submit, setSubmit] = useState(false);
+  // const [submit, setSubmit] = useState(false);
 
   const onSubmitClick = () => {
-    setSubmit((prev) => !prev);
+    (async () => {
+      await fetchDataWithBody("discussions", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Date.now(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          title: titleRef.current.value,
+          author: user,
+          bodyHTML: contentRef.current.value,
+          tag: tagRef.current.value,
+          avatarUrl: "./asset/user.png",
+          answer: null,
+        }),
+      });
+
+      initFetch();
+      setShow((prev) => !prev);
+    })();
   };
   // TODO: 현재 post요청 시 404 에러 수정 완료 : 경로 오류
   //TODO: fetch 요청 에러 처리
-  useEffect(() => {
-    submit &&
-      (async () => {
-        await fetchDataWithBody("discussions", {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: Date.now(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            title: titleRef.current.value,
-            author: user,
-            bodyHTML: contentRef.current.value,
-            tag: tagRef.current.value,
-            avatarUrl: "./asset/user.png",
-            answer: null,
-          }),
-        });
+  // useEffect(() => {
+  //   submit &&
 
-        initFetch();
-        setShow((prev) => !prev);
-      })();
-  }, [submit]);
+  // }, [submit]);
   return (
     <Modal title="NEW DISCUSSION" setShow={setShow}>
       <ModalContent text="TITLE">
